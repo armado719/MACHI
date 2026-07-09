@@ -10,7 +10,7 @@
     "typecheck": "tsc --noEmit",
     "db:push": "prisma db push",
     "db:studio": "prisma studio",
-    "db:seed": "tsx prisma/seed.ts"
+    "db:seed": "prisma db seed"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",

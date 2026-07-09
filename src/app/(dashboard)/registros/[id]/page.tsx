@@ -1,6 +1,7 @@
 import { RegistroForm } from '@/components/modules/registros/RegistroForm'
 
-export default function EditarRegistroPage({ params }: { params: { id: string } }) {
+export default async function EditarRegistroPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   return (
     <div className="space-y-6">
       <div>
@@ -9,7 +10,7 @@ export default function EditarRegistroPage({ params }: { params: { id: string } 
           Ajuste los valores del turno — los cambios quedan en el historial de auditoría
         </p>
       </div>
-      <RegistroForm mode="editar" registroId={params.id} />
+      <RegistroForm mode="editar" registroId={id} />
     </div>
   )
 }

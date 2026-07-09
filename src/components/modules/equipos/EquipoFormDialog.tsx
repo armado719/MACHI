@@ -28,8 +28,18 @@ interface Sede {
   nombre: string
 }
 
-interface Equipo extends EquipoFormData {
+interface Equipo {
   id: string
+  sedeId: string
+  nombre: string
+  marca: string | null
+  modelo: string | null
+  serie: string | null
+  capacidadTanqueGalones: number | null
+  intervaloMantenimientoHoras: number | null
+  umbralAmarilloHoras: number | null
+  umbralRojoHoras: number | null
+  activo: boolean
 }
 
 export function EquipoFormDialog({
@@ -62,18 +72,31 @@ export function EquipoFormDialog({
   useEffect(() => {
     if (open) {
       reset(
-        equipo ?? {
-          sedeId: defaultSedeId ?? '',
-          nombre: '',
-          marca: '',
-          modelo: '',
-          serie: '',
-          capacidadTanqueGalones: undefined,
-          intervaloMantenimientoHoras: undefined,
-          umbralAmarilloHoras: undefined,
-          umbralRojoHoras: undefined,
-          activo: true,
-        }
+        equipo
+          ? {
+              sedeId: equipo.sedeId,
+              nombre: equipo.nombre,
+              marca: equipo.marca ?? '',
+              modelo: equipo.modelo ?? '',
+              serie: equipo.serie ?? '',
+              capacidadTanqueGalones: equipo.capacidadTanqueGalones,
+              intervaloMantenimientoHoras: equipo.intervaloMantenimientoHoras,
+              umbralAmarilloHoras: equipo.umbralAmarilloHoras,
+              umbralRojoHoras: equipo.umbralRojoHoras,
+              activo: equipo.activo,
+            }
+          : {
+              sedeId: defaultSedeId ?? '',
+              nombre: '',
+              marca: '',
+              modelo: '',
+              serie: '',
+              capacidadTanqueGalones: undefined,
+              intervaloMantenimientoHoras: undefined,
+              umbralAmarilloHoras: undefined,
+              umbralRojoHoras: undefined,
+              activo: true,
+            }
       )
     }
   }, [open, equipo, defaultSedeId, reset])

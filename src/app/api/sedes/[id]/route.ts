@@ -5,7 +5,8 @@ import { prisma } from '@/lib/prisma'
 import { logAudit } from '@/lib/audit'
 import { sedeSchema } from '@/validations/sede'
 
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const session = await getServerSession(authOptions)
   if (!session || session.user.role !== 'ADMIN') {
     return NextResponse.json({ error: 'No autorizado' }, { status: 403 })
@@ -21,7 +22,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
   }
 
   const sede = await prisma.sede.update({
-    where: { id: params.id },
+    where: { id: id },
     data: parsed.data,
   })
 
@@ -36,14 +37,15 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
   return NextResponse.json(sede)
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const session = await getServerSession(authOptions)
   if (!session || session.user.role !== 'ADMIN') {
     return NextResponse.json({ error: 'No autorizado' }, { status: 403 })
   }
 
   const equiposActivos = await prisma.equipo.count({
-    where: { sedeId: params.id, deletedAt: null },
+    where: { sedeId: id, deletedAt: null },
   })
 
   if (equiposActivos > 0) {
@@ -54,7 +56,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
   }
 
   await prisma.sede.update({
-    where: { id: params.id },
+    where: { id: id },
     data: { deletedAt: new Date() },
   })
 
@@ -62,7 +64,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     userId: session.user.id,
     action: 'DELETE',
     entity: 'Sede',
-    entityId: params.id,
+    entityId: id,
   })
 
   return NextResponse.json({ ok: true })

@@ -27,7 +27,10 @@ async function upsertAlerta(
   })
 }
 
-async function resolverAlerta(equipoId: string, tipo: string) {
+async function resolverAlerta(
+  equipoId: string,
+  tipo: 'MANTENIMIENTO_PROXIMO' | 'MANTENIMIENTO_VENCIDO' | 'CONSUMO_ANOMALO'
+) {
   await prisma.alerta.updateMany({
     where: { equipoId, tipo, estado: 'ACTIVA' },
     data: { estado: 'RECONOCIDA', reconocidaAt: new Date() },

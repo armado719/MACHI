@@ -4,13 +4,14 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { logAudit } from '@/lib/audit'
 
-export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const session = await getServerSession(authOptions)
   if (!session || (session.user.role !== 'COORDINADOR' && session.user.role !== 'ADMIN')) {
     return NextResponse.json({ error: 'No autorizado' }, { status: 403 })
   }
 
-  const registro = await prisma.registroDiario.findUnique({ where: { id: params.id } })
+  const registro = await prisma.registroDiario.findUnique({ where: { id: id } })
   if (!registro || registro.deletedAt) {
     return NextResponse.json({ error: 'Registro no encontrado' }, { status: 404 })
   }
@@ -23,7 +24,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
   }
 
   const updated = await prisma.registroDiario.update({
-    where: { id: params.id },
+    where: { id: id },
     data: {
       estado: 'APROBADO',
       aprobadoPorId: session.user.id,

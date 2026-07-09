@@ -334,18 +334,27 @@ enum EstadoAlerta      { ACTIVA RECONOCIDA }
 
 ## FASES DE DESARROLLO
 
-### Fase 1 — MVP
-- [ ] Setup: Next.js 15 + Prisma + MySQL + NextAuth funcionando
-- [ ] Login con 3 roles, middleware por rol
-- [ ] CRUD Sedes (Admin)
-- [ ] CRUD Equipos con ficha técnica y umbrales (Admin)
-- [ ] Registro diario: formulario, grid dinámico, duplicar anterior, foto evidencia
-- [ ] Aprobación por Coordinador (filtrada por sede) + bloqueo post-aprobación
-- [ ] Dashboard/histórico con filtros y acumulados
-- [ ] Alertas escalonadas + consumo anómalo + panel de reconocimiento
-- [ ] Exportar PDF (layout del correo actual)
-- [ ] Exportar Excel (individual + consolidado, hoja larga)
-- [ ] Offline-first: IndexedDB + indicador + sync automático
+### Fase 1 — MVP ✅ COMPLETADA (build verificado — pendiente probar contra MySQL real)
+- [x] Setup: Next.js 15 + Prisma + MySQL + NextAuth funcionando
+- [x] Login con 3 roles, middleware por rol
+- [x] CRUD Sedes (Admin)
+- [x] CRUD Equipos con ficha técnica y umbrales (Admin)
+- [x] Registro diario: formulario, grid dinámico, duplicar anterior, foto evidencia
+- [x] Aprobación por Coordinador (filtrada por sede) + bloqueo post-aprobación
+- [x] Dashboard/histórico con filtros y acumulados
+- [x] Alertas escalonadas + consumo anómalo + panel de reconocimiento
+- [x] Exportar PDF (layout propio — pendiente calcar el correo real si se provee referencia)
+- [x] Exportar Excel (individual + consolidado, hoja larga)
+- [x] Offline-first: IndexedDB + indicador + sync automático
+- [x] Configuración: usuarios y costo por galón (Admin)
+- [x] Seed de datos demo (`prisma/seed.ts`)
+
+**Pendiente de ajustar según lo acordado ("lo ajustamos después"):**
+- Semántica del campo combustible (¿cargado vs. consumido?)
+- Modelo de edición concurrente multi-electromecánico por turno/sede
+- Historización del costo por galón (hoy es un valor global único)
+- Layout real del PDF (se necesita el correo/plantilla de referencia)
+- Definición de umbrales de alerta (horas absolutas vs. % del intervalo)
 
 ### Fase 2 — Analítica y automatización
 - [ ] Cálculo automático de rendimiento (Gls/Hr) por equipo/periodo

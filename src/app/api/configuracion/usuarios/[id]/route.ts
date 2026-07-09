@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
+import bcrypt from 'bcryptjs'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { logAudit } from '@/lib/audit'
-import { equipoSchema } from '@/validations/equipo'
+import { usuarioSchema } from '@/validations/usuario'
 
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -13,7 +14,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
   }
 
   const body = await request.json()
-  const parsed = equipoSchema.safeParse(body)
+  const parsed = usuarioSchema.safeParse(body)
   if (!parsed.success) {
     return NextResponse.json(
       { error: 'Datos inválidos', details: parsed.error.flatten() },
@@ -21,27 +22,26 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     )
   }
 
-  const { sedeId, ...rest } = parsed.data
-  const equipo = await prisma.equipo.update({
-    where: { id: id },
-    data: {
-      ...rest,
-      marca: rest.marca || null,
-      modelo: rest.modelo || null,
-      serie: rest.serie || null,
-      sede: { connect: { id: sedeId } },
-    },
-  })
+  const data: Record<string, unknown> = {
+    name: parsed.data.name,
+    email: parsed.data.email,
+    role: parsed.data.role,
+    active: parsed.data.active,
+  }
+  if (parsed.data.password) {
+    data.password = await bcrypt.hash(parsed.data.password, 10)
+  }
+
+  const usuario = await prisma.user.update({ where: { id: id }, data })
 
   await logAudit({
     userId: session.user.id,
     action: 'UPDATE',
-    entity: 'Equipo',
-    entityId: equipo.id,
-    changes: parsed.data,
+    entity: 'User',
+    entityId: usuario.id,
   })
 
-  return NextResponse.json(equipo)
+  return NextResponse.json({ id: usuario.id, name: usuario.name, email: usuario.email })
 }
 
 export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -51,15 +51,16 @@ export async function DELETE(request: NextRequest, { params }: { params: Promise
     return NextResponse.json({ error: 'No autorizado' }, { status: 403 })
   }
 
-  await prisma.equipo.update({
-    where: { id: id },
-    data: { deletedAt: new Date(), activo: false },
-  })
+  if (id === session.user.id) {
+    return NextResponse.json({ error: 'No puedes desactivar tu propio usuario' }, { status: 400 })
+  }
+
+  await prisma.user.update({ where: { id: id }, data: { active: false } })
 
   await logAudit({
     userId: session.user.id,
     action: 'DELETE',
-    entity: 'Equipo',
+    entity: 'User',
     entityId: id,
   })
 

@@ -6,14 +6,15 @@ import { logAudit } from '@/lib/audit'
 import { actualizarRegistro, ConflictoRegistroError } from '@/lib/registros'
 import { registroSchema } from '@/validations/registro'
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const session = await getServerSession(authOptions)
   if (!session) {
     return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
   }
 
   const registro = await prisma.registroDiario.findUnique({
-    where: { id: params.id },
+    where: { id: id },
     include: {
       sede: { select: { id: true, nombre: true } },
       creadoPor: { select: { id: true, name: true } },
@@ -29,7 +30,8 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
   return NextResponse.json(registro)
 }
 
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const session = await getServerSession(authOptions)
   if (!session) {
     return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
@@ -48,7 +50,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
     const { registro, warnings } = await actualizarRegistro(
       session.user.id,
       session.user.role === 'ADMIN',
-      params.id,
+      id,
       parsed.data,
       body.motivo
     )

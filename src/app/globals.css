@@ -1,0 +1,101 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --steel: #3E5C76;
+  --steel-light: #6C8EAE;
+  --steel-dark: #26374A;
+  --bg-base: #F4F6F8;
+  --bg-surface: #FFFFFF;
+  --content: #1C2430;
+  --content-muted: #64748B;
+  --border: #E2E5EA;
+  --amber: #D98E04;
+  --red: #D6402F;
+  --green: #2F9E5B;
+}
+
+@layer base {
+  body {
+    @apply bg-bg-base text-content font-sans;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
+  }
+}
+
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: var(--border);
+    border-radius: 3px;
+  }
+}
+
+/* ============================================================
+   ESTILOS DE IMPRESIÓN
+   ============================================================ */
+@media print {
+  nav,
+  aside,
+  header,
+  [data-sidebar],
+  [data-header],
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: white !important;
+    color: #000 !important;
+    font-size: 11pt;
+  }
+
+  .shadow-sm,
+  .shadow,
+  .shadow-md,
+  .shadow-lg {
+    box-shadow: none !important;
+  }
+
+  .print-header {
+    display: block !important;
+    border-bottom: 2px solid #3E5C76;
+    padding-bottom: 12pt;
+    margin-bottom: 16pt;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  .page-break-avoid {
+    page-break-inside: avoid;
+  }
+
+  @page {
+    margin: 2cm;
+    size: A4;
+  }
+
+  button,
+  a[role="button"],
+  [data-print-hide] {
+    display: none !important;
+  }
+}

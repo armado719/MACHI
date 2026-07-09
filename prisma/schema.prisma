@@ -1,0 +1,189 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ELECTROMECANICO
+  COORDINADOR
+  ADMIN
+}
+
+enum Turno {
+  DIA
+  NOCHE
+}
+
+enum EstadoRegistro {
+  BORRADOR
+  ENVIADO
+  APROBADO
+  RECHAZADO
+}
+
+enum SeveridadAlerta {
+  AMARILLA
+  ROJA
+}
+
+enum TipoAlerta {
+  MANTENIMIENTO_PROXIMO
+  MANTENIMIENTO_VENCIDO
+  CONSUMO_ANOMALO
+}
+
+enum EstadoAlerta {
+  ACTIVA
+  RECONOCIDA
+}
+
+model User {
+  id        String    @id @default(cuid())
+  name      String
+  email     String    @unique
+  password  String
+  role      Role      @default(ELECTROMECANICO)
+  active    Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  registrosCreados   RegistroDiario[] @relation("RegistroCreadoPor")
+  registrosAprobados RegistroDiario[] @relation("RegistroAprobadoPor")
+  alertasReconocidas Alerta[]
+  logsAuditoria      LogAuditoria[]
+
+  @@map("users")
+}
+
+model Sede {
+  id           String    @id @default(cuid())
+  nombre       String
+  ciudad       String
+  departamento String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+
+  equipos   Equipo[]
+  registros RegistroDiario[]
+
+  @@map("sedes")
+}
+
+model Equipo {
+  id                          String    @id @default(cuid())
+  sedeId                      String
+  nombre                      String
+  marca                       String?
+  modelo                      String?
+  serie                       String?
+  capacidadTanqueGalones      Decimal?  @db.Decimal(10, 2)
+  intervaloMantenimientoHoras Decimal?  @db.Decimal(10, 2)
+  umbralAmarilloHoras         Decimal?  @db.Decimal(10, 2)
+  umbralRojoHoras             Decimal?  @db.Decimal(10, 2)
+  ultimoHorometro             Decimal   @default(0) @db.Decimal(10, 2)
+  horasDesdeMantenimiento     Decimal   @default(0) @db.Decimal(10, 2)
+  activo                      Boolean   @default(true)
+  createdAt                   DateTime  @default(now())
+  updatedAt                   DateTime  @updatedAt
+  deletedAt                   DateTime?
+
+  sede     Sede            @relation(fields: [sedeId], references: [id])
+  lecturas LecturaEquipo[]
+  alertas  Alerta[]
+
+  @@map("equipos")
+}
+
+model RegistroDiario {
+  id                    String         @id @default(cuid())
+  sedeId                String
+  fecha                 DateTime       @db.Date
+  turno                 Turno
+  estado                EstadoRegistro @default(BORRADOR)
+  creadoPorId           String
+  aprobadoPorId         String?
+  comentarioAprobacion  String?        @db.Text
+  aprobadoAt            DateTime?
+  createdAt             DateTime       @default(now())
+  updatedAt             DateTime       @updatedAt
+  deletedAt              DateTime?
+
+  sede       Sede            @relation(fields: [sedeId], references: [id])
+  creadoPor  User            @relation("RegistroCreadoPor", fields: [creadoPorId], references: [id])
+  aprobadoPor User?          @relation("RegistroAprobadoPor", fields: [aprobadoPorId], references: [id])
+  lecturas   LecturaEquipo[]
+
+  @@unique([sedeId, fecha, turno])
+  @@map("registros_diarios")
+}
+
+model LecturaEquipo {
+  id                  String   @id @default(cuid())
+  registroDiarioId    String
+  equipoId            String
+  horometro            Decimal  @db.Decimal(10, 2)
+  combustibleGalones  Decimal? @db.Decimal(8, 2)
+  deltaHoras          Decimal? @db.Decimal(10, 2)
+  horometroRetrocedio Boolean  @default(false)
+  fotoEvidenciaUrl    String?
+  hallazgos           String?  @db.Text
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  registro RegistroDiario @relation(fields: [registroDiarioId], references: [id], onDelete: Cascade)
+  equipo   Equipo         @relation(fields: [equipoId], references: [id])
+
+  @@unique([registroDiarioId, equipoId])
+  @@map("lecturas_equipo")
+}
+
+model Alerta {
+  id              String          @id @default(cuid())
+  equipoId        String
+  tipo            TipoAlerta
+  severidad       SeveridadAlerta
+  estado          EstadoAlerta    @default(ACTIVA)
+  mensaje         String
+  reconocidaPorId String?
+  reconocidaAt    DateTime?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  equipo        Equipo @relation(fields: [equipoId], references: [id])
+  reconocidaPor User?  @relation(fields: [reconocidaPorId], references: [id])
+
+  @@map("alertas")
+}
+
+model LogAuditoria {
+  id        String   @id @default(cuid())
+  userId    String
+  action    String
+  entity    String
+  entityId  String
+  changes   Json?
+  motivo    String?  @db.Text
+  ip        String?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("logs_auditoria")
+}
+
+model ConfiguracionGlobal {
+  id                        String   @id @default(cuid())
+  nombreEmpresa             String   @default("Empresa X")
+  logoUrl                   String?
+  costoPorGalon             Decimal  @default(0) @db.Decimal(10, 2)
+  umbralAnomaliaPorcentaje  Decimal  @default(30) @db.Decimal(5, 2)
+  updatedAt                 DateTime @updatedAt
+
+  @@map("configuracion_global")
+}

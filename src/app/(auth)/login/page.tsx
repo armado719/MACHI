@@ -74,7 +74,7 @@ export default function LoginPage() {
               <img src="/icon.png" alt="Gworks Services" className="h-14 w-auto" />
             </div>
             <p className="text-content-muted text-xs font-sans mt-2">
-              Tracker de Horómetros y Combustible
+              Gworks Services S.A.S.
             </p>
           </div>
 

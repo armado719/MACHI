@@ -87,9 +87,12 @@ export function Sidebar() {
   return (
     <aside className="fixed left-0 top-0 h-full w-[260px] bg-white border-r border-border flex flex-col z-40">
       <div className="p-6 border-b border-border">
-        <div className="flex items-center">
+        <div className="flex flex-col items-start">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/icon.png" alt="Gworks Services" className="h-9 w-auto" />
+          <p className="text-xs text-content-muted mt-1.5 font-sans">
+            Gworks Services S.A.S.
+          </p>
         </div>
       </div>
 

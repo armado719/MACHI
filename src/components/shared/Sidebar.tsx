@@ -13,7 +13,6 @@ import {
   Truck,
   Settings,
   LogOut,
-  Gauge,
   ChevronRight,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -88,18 +87,9 @@ export function Sidebar() {
   return (
     <aside className="fixed left-0 top-0 h-full w-[260px] bg-white border-r border-border flex flex-col z-40">
       <div className="p-6 border-b border-border">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-steel flex items-center justify-center shrink-0">
-            <Gauge className="w-5 h-5 text-white" />
-          </div>
-          <div>
-            <h1 className="font-display text-xl font-semibold text-content tracking-wide leading-none">
-              MACHI
-            </h1>
-            <p className="text-xs text-content-muted mt-0.5 font-sans">
-              Gworks Services S.A.S.
-            </p>
-          </div>
+        <div className="flex items-center">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/icon.png" alt="Gworks Services" className="h-9 w-auto" />
         </div>
       </div>
 

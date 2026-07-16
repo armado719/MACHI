@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { Eye, EyeOff, Gauge } from 'lucide-react'
+import { Eye, EyeOff } from 'lucide-react'
 
 const loginSchema = z.object({
   email: z.string().email('Ingrese un email válido'),
@@ -70,13 +70,9 @@ export default function LoginPage() {
         <div className="bg-bg-surface/95 backdrop-blur border border-border rounded-2xl shadow-md p-8 sm:p-10">
           <div className="text-center mb-8">
             <div className="flex justify-center mb-3">
-              <div className="w-14 h-14 rounded-xl bg-steel flex items-center justify-center">
-                <Gauge className="w-7 h-7 text-white" />
-              </div>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/icon.png" alt="Gworks Services" className="h-14 w-auto" />
             </div>
-            <h1 className="font-display text-3xl font-semibold text-content tracking-wide leading-none">
-              MACHI
-            </h1>
             <p className="text-content-muted text-xs font-sans mt-2">
               Tracker de Horómetros y Combustible
             </p>

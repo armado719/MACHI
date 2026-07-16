@@ -114,10 +114,10 @@ async function main() {
 
   await prisma.configuracionGlobal.upsert({
     where: { id: 'seed-config' },
-    update: {},
+    update: { nombreEmpresa: 'Gworks Services S.A.S.' },
     create: {
       id: 'seed-config',
-      nombreEmpresa: 'Empresa X',
+      nombreEmpresa: 'Gworks Services S.A.S.',
       costoPorGalon: 10500,
       umbralAnomaliaPorcentaje: 30,
     },

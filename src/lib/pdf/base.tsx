@@ -129,7 +129,7 @@ export const baseStyles = StyleSheet.create({
 export function PDFHeader({
   documentType,
   date,
-  empresa = 'Empresa X',
+  empresa = 'Gworks Services S.A.S.',
 }: {
   documentType: string
   date: string

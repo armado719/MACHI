@@ -66,7 +66,7 @@ export default function SedesPage() {
         <div>
           <h1 className="font-display text-3xl font-semibold text-content">Sedes</h1>
           <p className="text-content-muted text-sm mt-1">
-            Empresa X opera en varias ciudades — el personal rota entre sedes por ciclo de turno
+            Gworks Services opera en varias ciudades — el personal rota entre sedes por ciclo de turno
           </p>
         </div>
         <Button

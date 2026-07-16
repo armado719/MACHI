@@ -1,11 +1,12 @@
 # MACHI — PWA Tracker de Horómetros y Combustible
-## Cliente: [EMPRESA X] (nombre y logo provisionales — branding pendiente de confirmación)
+## Cliente: Gworks Services S.A.S.
 
-> Nota: este NO es un módulo de GRS/RIG 158. Es un proyecto independiente para otra
-> empresa, provisionalmente llamada "Empresa X" hasta confirmar nombre y logo
-> definitivos. La identidad visual usa una paleta clara neutra industrial como base
-> provisional (no la paleta oscura del portafolio ARC), reemplazable cuando se
-> confirme el branding real de Empresa X.
+> Nota: este NO es un módulo de GRS/RIG 158. Es un proyecto independiente para
+> Gworks Services S.A.S. (antes referido como "Empresa X" mientras se confirmaba
+> nombre y logo — ya confirmado). La identidad visual usa una paleta clara neutra
+> industrial como base (no la paleta oscura del portafolio ARC) — pendiente
+> ajustarla con los colores/logo reales de Gworks Services (verde y rojo/magenta)
+> una vez se tenga el archivo del logo en el repositorio.
 
 ---
 
@@ -383,7 +384,10 @@ enum EstadoAlerta      { ACTIVA RECONOCIDA }
 
 ## PENDIENTE POR DEFINIR CON EL USUARIO
 
-- Nombre real y logo de Empresa X (reemplaza branding provisional ARC).
+- ~~Nombre real y logo de Empresa X~~ ✅ Confirmado: **Gworks Services S.A.S.**
+  Falta: archivo del logo (PNG/SVG) en el repo para reemplazar el ícono
+  placeholder en Sidebar/Login/PDF, y ajustar la paleta de `tailwind.config.ts`
+  a los colores reales de marca (verde oscuro + rojo/magenta, según el logo).
 
 ---
 

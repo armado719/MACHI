@@ -97,7 +97,7 @@ export function Sidebar() {
               MACHI
             </h1>
             <p className="text-xs text-content-muted mt-0.5 font-sans">
-              Empresa X
+              Gworks Services S.A.S.
             </p>
           </div>
         </div>
